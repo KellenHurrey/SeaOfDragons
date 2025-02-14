@@ -23,8 +23,10 @@
 				width: 80vw;
 				max-width: 80vw;
 				object-fit: cover;
+				z-index: -2;
         	}
 			.overlay-text {
+				z-index: 100;
 				position:absolute;
 				width: 1.5vw; /* Adjust size */
 				height: 1.5vw; /* Adjust size */
@@ -40,6 +42,7 @@
 				font-weight: bold;
 			}
 			.overlay-text-green {
+				z-index: 100;
 				position:absolute;
 				width: 1.5vw; /* Adjust size */
 				height: 1.5vw; /* Adjust size */
@@ -67,8 +70,10 @@
 				align-items: center;
 				justify-content: center;
 				visibility: hidden;
+				z-index: -1;
 			}
 			.overlay-div {
+				z-index: 150;
 				position: absolute;
 				display: flex;
 				top:1vw;
@@ -78,6 +83,7 @@
 				background-color: rgba(51, 255, 0, 0.732);
 			}
 			.popup-button{
+				z-index: 150;
 				margin:0.5vw;
 				font-size: 0.8vw;
 				width:auto;
@@ -102,6 +108,12 @@
 				font-size: 2vw;
 				justify-content:flex-end;
 			}
+			.ui {
+				z-index: 1;
+			}
+			.bucket {
+				color:blue;
+			}
 		</style>
 	</head>
 	<body>
@@ -120,44 +132,47 @@
 				<a class="water" id="water">Water: /</a>
 			</div>
 		</div>
-		<div>
-			<label for="ship-selector">Ship: </label>
-			<select id="ship-selector">
+		<div class="ui">
+			<label for="ship-selector" class="ui">Ship: </label>
+			<select id="ship-selector" class="ui">
 				<option value="Sloop">Sloop</option>
 				<option value="Brig">Brig</option>
 				<option value="Gal">Gal</option>
 			</select>
 			<br>
 			<br>
-			<button onclick="trigger_round()">Trigger Round</button>
+			<button onclick="trigger_round()" class="ui">Trigger Round</button>
 			<br>
 			<br>
-			<button onclick="hit_hole()">Add</button>
-			<label> level </label>
-			<select id="level">
+			<button onclick="hit_hole()" class="ui">Add</button>
+			<label class="ui"> level </label>
+			<select id="level" class="ui">
 				<option value="1">1</option>
 				<option value="2">2</option>
 				<option value="3">3</option>
 			</select>
 			<br>
 			<br>
-			<button onclick="repair_all()">Repair All Holes</button>
-			<button onclick="bucket()">Bucket</button>
+			<button onclick="repair_all()" class="ui">Repair All Holes</button>
+			<button onclick="bucket()" class="ui">Bucket</button>
+			<button onclick="unbucket()" class="ui">Fill</button>
 			<br>
-			<a class="bucket" id="bucket"></a>
+			<label for="amount" class="ui">Fill amount:</label>
+			<input class="ui" id="amount" type="number" value="5" min="1" style="width:8vw;">
+			<br>
+			<a class="bucket ui" id="bucket"></a>
+			<br>
+			<button onclick="meg()" class="ui">Meg</button>
+			<button onclick="keg()" class="ui">Keg</button>
 			<br>
 			<br>
-			<button onclick="meg()">Meg</button>
-			<button onclick="keg()">Keg</button>
+			<button onclick="save()" class="ui">Save (Local Storage)</button>
+			<button onclick="load()" class="ui">Load (Local Storage)</button>
+			<label for="slot" class="ui">Slot: </label>
+			<input id="slot" type="number" value="0" min="0" max="15" class="ui">
 			<br>
-			<br>
-			<button onclick="save()">Save (Cookie)</button>
-			<button onclick="load()">Load (Cookie)</button>
-			<label for="slot">Slot: </label>
-			<input type="number" value="0" min="0" max="15">
-			<br>
-			<button onclick="save_file()">Save (File)</button>
-			<button onclick="load_file()">Load (File)</button>
+			<button onclick="save_file()" class="ui">Save (File)</button>
+			<button onclick="load_file()" class="ui">Load (File)</button>
 		</div>
 		<script src="ship_viewer.js" async defer></script>
 		<!--<script>

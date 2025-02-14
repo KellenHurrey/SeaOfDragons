@@ -9,6 +9,61 @@ async function get_json(path){
 	return out;
 }
 
+function save(){
+	var slot = document.getElementById("slot").value
+	localStorage.setItem("shipSlot" + slot, JSON.stringify(ship_data))
+
+}
+function load(){
+	var slot = document.getElementById("slot").value
+	var new_data = JSON.parse(localStorage.getItem("shipSlot" + slot))
+	if (new_data){
+		ship_data = new_data
+	}else{
+		ship_data = {
+			"Holes": [],
+			"Type" : 0,
+			"WaterLevel": 0.0
+		}
+	}
+	update_overlay()
+}
+
+function save_file(){
+	const data = JSON.stringify(ship_data)
+	const blob = new Blob([data], {type: 'type/plain'})
+	const url = URL.createObjectURL(blob)
+	const link = document.createElement("a")
+	link.href = url
+	link.download = "shipData.txt"
+	document.body.appendChild(link)
+	link.click()
+	document.body.removeChild(link)
+	URL.revokeObjectURL(url)
+}
+
+async function openFilePicker() {
+	try {
+	  const handles = await window.showOpenFilePicker({ multiple: false });
+	  const files = await Promise.all(handles.map(handle => handle.getFile()));
+	  
+	  var reader = new FileReader()
+	  reader.readAsArrayBuffer(files[0])
+	  reader.onloadend = function(){
+		var enc = new TextDecoder("utf-8")
+		ship_data = JSON.parse(enc.decode(reader.result))
+		update_overlay()
+	  }
+	
+	} catch (err) {
+	  console.error("The user canceled the selection or an error occurred:", err);
+	}
+  }
+
+function load_file(){
+	openFilePicker()
+}
+
 function show_popup(element){
  	const popup = document.getElementById("popup")
  	if (popup.style.visibility == "visible"){
@@ -32,6 +87,19 @@ function show_popup(element){
 	}
 }
 
+function keg(){
+	var num_holes = Math.floor(Math.random() * 6) + 5
+	var index = Math.floor(Math.random() * ship_data["Holes"].length)
+	for (var i = index; i < num_holes + index; i++){
+		if (i >= ship_data["Holes"].length){
+			ship_data["Holes"][Math.abs(i - ship_data["Holes"].length)] =  Math.min(ship_data["Holes"][Math.abs(i - ship_data["Holes"].length)] + (Math.floor(Math.random() * 2) + 2), 3)
+		}else{
+			ship_data["Holes"][i] =  Math.min(ship_data["Holes"][i] + (Math.floor(Math.random() * 2) + 2), 3)
+		}
+	}
+	update_overlay()
+}
+
 function meg(){
 	var num_holes = Math.floor(Math.random() * 2) + 2
 	var index = Math.floor(Math.random() * ship_data["Holes"].length)
@@ -45,24 +113,27 @@ function meg(){
 	update_overlay()
 }
 
+function unbucket(){
+	var amount = parseInt(document.getElementById("amount").value)
+	var water = ship_data["WaterLevel"]
+	water += amount
+	ship_data["WaterLevel"] = water
+
+	update_overlay()
+}
+
 function bucket(){
 	var disp = document.getElementById("bucket")
 	var water = ship_data["WaterLevel"]
 	if (water >= 50){
-		disp.innerText = "50 water bucketed"
+		disp.innerText = "50 water bailed"
 		water -= 50
 	}
 	else{
-		disp.innerText = water + " water bucketed"
+		disp.innerText = Math.round(water) + " water bailed"
 		water = 0
 	}
 	ship_data["WaterLevel"] = water
-
-	if (water >= ship_locations["Ships"][ship_data["Type"]]["MaxWater"]){
-		ship_data["Sunk"] = true
-	}else{
-		ship_data["Sunk"] = false
-	}
 
 	update_overlay()
 }
@@ -135,12 +206,6 @@ function trigger_round(){
 		}
 	}
 	ship_data["WaterLevel"] = water
-	if (water >= ship_locations["Ships"][ship_data["Type"]]["MaxWater"]){
-		ship_data["Sunk"] = true
-	}else{
-		ship_data["Sunk"] = false
-	}
-
 	update_overlay()
 }
 
@@ -150,11 +215,10 @@ const container = document.querySelector(".ship-container")
 
 var ship_image = document.getElementById("ship-image")
 
-const ship_data = {
+var ship_data = {
 	"Holes": [],
 	"Type" : 0,
-	"WaterLevel": 0.0,
-	"Sunk": false
+	"WaterLevel": 0.0
 }
 
 async function update_overlay(){
@@ -208,7 +272,7 @@ async function update_overlay(){
 		}
 	}
 
-	if (ship_data["Sunk"]){
+	if (ship_data["WaterLevel"] >= ship_locations["Ships"][ship_data["Type"]]["MaxWater"]){
 		document.getElementById("sunk-text").style.visibility = "visible";
 		document.getElementById("water").classList.remove("water")
 		document.getElementById("water").classList.add("water-sunk")
