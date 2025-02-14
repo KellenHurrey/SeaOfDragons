@@ -221,7 +221,7 @@ async function update_overlay(){
 	document.getElementById("water").innerText = "Water: " + Math.round(ship_data["WaterLevel"]) + "/" + Math.round(ship_locations["Ships"][ship_data["Type"]]["MaxWater"])
 }
 
-ship_image.onload = update_overlay;
+update_overlay()
 
 window.addEventListener("click", function(event) {
     // List of elements to ignore (can be classes, IDs, or tag names)
