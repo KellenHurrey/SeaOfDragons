@@ -63,7 +63,7 @@ function bucket(){
 	}else{
 		ship_data["Sunk"] = false
 	}
-	
+
 	update_overlay()
 }
 
@@ -195,16 +195,14 @@ async function update_overlay(){
 			a.classList.add("overlay-text-green")
 			if (i >= num_lowers){
 				a.id = "u" + (i - num_lowers)
-				a.innerText = i - num_lowers
 				a.style.left = `${(upperHoles[i - num_lowers]["X"]/ship_locations["Ships"][ship_data["Type"]]["ImageSize"]["X"]) * image_x / window.innerWidth * 100}vw`
 				a.style.top =  `${(upperHoles[i - num_lowers]["Y"]/ship_locations["Ships"][ship_data["Type"]]["ImageSize"]["Y"]) * image_x / window.innerWidth * 100 * imageAspectRatio}vw`
 			}else{
 				a.id = i
 				a.style.left = `${(lowerHoles[i]["X"]/ship_locations["Ships"][ship_data["Type"]]["ImageSize"]["X"]) * image_x / window.innerWidth * 100}vw`
 				a.style.top =  `${(lowerHoles[i]["Y"]/ship_locations["Ships"][ship_data["Type"]]["ImageSize"]["Y"]) * image_x / window.innerWidth * 100 * imageAspectRatio}vw`
-
-				a.innerText = i
 			}
+			a.innerText = "+"
 			a.onclick = function(){ show_popup(this); };
 			container.appendChild(a);
 		}
