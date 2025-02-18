@@ -12,7 +12,6 @@ async function get_json(path){
 function save(){
 	var slot = document.getElementById("slot").value
 	localStorage.setItem("shipSlot" + slot, JSON.stringify(ship_data))
-
 }
 function load(){
 	var slot = document.getElementById("slot").value
@@ -153,6 +152,11 @@ function upgrade_hole(){
 	update_overlay()
 }
 
+function empty(){
+	ship_data["WaterLevel"] = 0;
+	update_overlay()
+}
+
 function repair_hole(){
 	const div = document.getElementById("popup")
 	id = div.lastElementChild.getAttribute("innerText")
@@ -179,6 +183,11 @@ function hit_hole(){
 	var level = document.getElementById("level").value
 	var index = Math.floor(ship_data["Holes"].length * Math.random())
 	ship_data["Holes"][index] = Math.min(3, parseInt(ship_data["Holes"][index]) + parseInt(level))
+	update_overlay()
+}
+
+function switch_ships(){
+	ship_data["Type"] = ship_types[document.getElementById("ship-selector").value]
 	update_overlay()
 }
 
@@ -221,6 +230,15 @@ var ship_data = {
 	"WaterLevel": 0.0
 }
 
+const ship_types = {
+	"Sloop": 0,
+	"Brig": 1,
+	"Gal": 2,
+	0: "Sloop",
+	1: "Brig",
+	2: "Gal"
+}
+
 async function update_overlay(){
 	if (ship_locations == null){
 		ship_locations = await get_json('ship_assets/ship_locations.json')
@@ -232,6 +250,8 @@ async function update_overlay(){
 			ship_data["Holes"].push(0)
 		}
 	}
+
+	ship_image.src = ship_locations["Ships"][ship_data["Type"]]["Path"]
 
 	document.querySelectorAll(".overlay-text-green").forEach(h => h.remove());
 	document.querySelectorAll(".overlay-text").forEach(h => h.remove());
@@ -280,6 +300,10 @@ async function update_overlay(){
 		document.getElementById("sunk-text").style.visibility = "hidden";
 		document.getElementById("water").classList.remove("water-sunk")
 		document.getElementById("water").classList.add("water")
+	}
+
+	if (ship_types[document.getElementById("ship-selector").value] != ship_data["Type"]){
+		document.getElementById("ship-selector").value = ship_types[ship_data["Type"]]
 	}
 
 	document.getElementById("water").innerText = "Water: " + Math.round(ship_data["WaterLevel"]) + "/" + Math.round(ship_locations["Ships"][ship_data["Type"]]["MaxWater"])

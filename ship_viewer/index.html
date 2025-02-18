@@ -134,7 +134,7 @@
 		</div>
 		<div class="ui">
 			<label for="ship-selector" class="ui">Ship: </label>
-			<select id="ship-selector" class="ui">
+			<select id="ship-selector" class="ui" onchange="switch_ships()"">
 				<option value="Sloop">Sloop</option>
 				<option value="Brig">Brig</option>
 				<option value="Gal">Gal</option>
@@ -156,6 +156,7 @@
 			<button onclick="repair_all()" class="ui">Repair All Holes</button>
 			<button onclick="bucket()" class="ui">Bucket</button>
 			<button onclick="unbucket()" class="ui">Fill</button>
+			<button onclick="empty()" class="ui">Empty</button>
 			<br>
 			<label for="amount" class="ui">Fill amount:</label>
 			<input class="ui" id="amount" type="number" value="5" min="1" style="width:8vw;">
