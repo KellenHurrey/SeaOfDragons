@@ -239,10 +239,7 @@ const ship_types = {
 	2: "Gal"
 }
 
-async function update_overlay(){
-	if (ship_locations == null){
-		ship_locations = await get_json('ship_assets/ship_locations.json')
-	}
+function continue_update_overlay(event){
 	const upperHoles = ship_locations["Ships"][ship_data["Type"]]["UpperHoles"]
 	const lowerHoles = ship_locations["Ships"][ship_data["Type"]]["LowerHoles"]
 	if (ship_data["Holes"].length == 0){
@@ -250,11 +247,6 @@ async function update_overlay(){
 			ship_data["Holes"].push(0)
 		}
 	}
-
-	ship_image.src = ship_locations["Ships"][ship_data["Type"]]["Path"]
-
-	document.querySelectorAll(".overlay-text-green").forEach(h => h.remove());
-	document.querySelectorAll(".overlay-text").forEach(h => h.remove());
 	const image_x = ship_image.clientWidth
 	const imageAspectRatio = ship_locations["Ships"][ship_data["Type"]]["ImageSize"]["Y"]/ship_locations["Ships"][ship_data["Type"]]["ImageSize"]["X"];
 	const num_lowers = lowerHoles.length
@@ -309,7 +301,24 @@ async function update_overlay(){
 	document.getElementById("water").innerText = "Water: " + Math.round(ship_data["WaterLevel"]) + "/" + Math.round(ship_locations["Ships"][ship_data["Type"]]["MaxWater"])
 }
 
+async function update_overlay(){
+	if (ship_locations == null){
+		ship_locations = await get_json('ship_assets/ship_locations.json')
+	}
+
+	document.querySelectorAll(".overlay-text-green").forEach(h => h.remove());
+	document.querySelectorAll(".overlay-text").forEach(h => h.remove());
+
+	if (ship_image.src != ship_locations["Ships"][ship_data["Type"]]["Path"]){
+		ship_image.src = ship_locations["Ships"][ship_data["Type"]]["Path"]
+	}
+	else{
+		continue_update_overlay(null)
+	}
+}
+
 update_overlay()
+ship_image.addEventListener("load", continue_update_overlay)
 
 window.addEventListener("click", function(event) {
     // List of elements to ignore (can be classes, IDs, or tag names)
