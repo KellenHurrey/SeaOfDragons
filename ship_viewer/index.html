@@ -12,16 +12,23 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="">
 		<style>
+			.container-container {
+				display: flex;
+				width: 100%;
+				max-width: 100%;
+				justify-content: center;
+				align-items: center;
+			}
 			.ship-container {
 				display:inline-block;
 				position: relative;
-				width: fit-content;
+				width: 90%;
 			}
 			.ship-image {
             	position: relative;
             	display:inline-flex;
-				width: 80vw;
-				max-width: 80vw;
+				width: 100%;
+				max-width: 100%;
 				object-fit: cover;
 				z-index: -2;
         	}
@@ -120,7 +127,7 @@
 		<!--[if lt IE 7]>
 			<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
 		<![endif]-->
-		<div>
+		<div class="container-container">
 			<div class="ship-container">
 				<img src="ship_assets/SloopBottomDeckNoBGNoGrid.png" alt="gu" id="ship-image" class="ship-image"></img>
 				<a class="sunk-text" id="sunk-text">SUNK</a>
